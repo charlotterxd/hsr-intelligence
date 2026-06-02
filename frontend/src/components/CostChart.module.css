@@ -1,0 +1,102 @@
+.container {
+  background: var(--bg-primary);
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.container h2 {
+  margin: 0 0 8px 0;
+  font-size: 1.5em;
+  color: #333;
+}
+
+.subtitle {
+  margin: 0 0 24px 0;
+  font-size: 0.95em;
+  color: #666;
+  font-weight: 500;
+}
+
+.empty {
+  background: var(--bg-primary);
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  color: #999;
+  font-size: 1em;
+}
+
+.tooltip {
+  background: #ffffff !important;
+  border: 1px solid #000000 !important;
+  border-radius: 6px;
+  padding: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.tooltip p {
+  margin: 4px 0;
+  font-size: 0.9em;
+}
+
+.tooltipLabel {
+  font-weight: 600;
+  color: #000000 !important;
+}
+
+.tooltipCount {
+  color: #333333 !important;
+  font-size: 0.85em;
+}
+
+.chartWrapper {
+  margin-bottom: 32px;
+}
+
+.chartWrapper:last-child {
+  margin-bottom: 0;
+}
+
+.chartTitle {
+  margin: 16px 0 12px 0;
+  font-size: 1.1em;
+  color: #555;
+  font-weight: 600;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.thresholdInput {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.thresholdInput label {
+  font-weight: 500;
+  color: #333;
+}
+
+.thresholdInput input {
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.thresholdInput input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-glow-10);
+}

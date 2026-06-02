@@ -1,0 +1,139 @@
+.container {
+  width: 100%;
+}
+
+.container h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.empty {
+  text-align: center;
+  color: #999;
+  padding: 40px;
+  font-size: 1.1em;
+}
+
+.stats {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.statGroup {
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.statGroupLabel {
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid;
+  font-size: 0.95em;
+}
+
+.statRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.stat {
+  background: var(--bg-primary);
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  border-left: 4px solid var(--accent);
+}
+
+.stat span {
+  display: block;
+  font-size: 0.85em;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+.stat strong {
+  display: block;
+  font-size: 1.6em;
+  color: #333;
+}
+
+.tooltip {
+  background: #ffffff !important;
+  border: 1px solid #000000 !important;
+  border-radius: 6px;
+  padding: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.tooltipLabel {
+  margin: 0 0 8px 0;
+  font-weight: 600;
+  color: #000000 !important;
+  font-size: 0.9em;
+}
+
+.tooltipItem {
+  margin-bottom: 6px;
+}
+
+.tooltipLine {
+  margin: 0 0 2px 0;
+  font-weight: 600;
+  font-size: 0.9em;
+}
+
+.tooltipCount {
+  margin: 0;
+  color: #333333 !important;
+  font-size: 0.8em;
+}
+
+@media (max-width: 768px) {
+  .statRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.header h2 {
+  margin: 0;
+}
+
+.thresholdInput {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.thresholdInput label {
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+}
+
+.thresholdInput input {
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.thresholdInput input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-glow-10);
+}

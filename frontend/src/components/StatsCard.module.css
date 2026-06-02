@@ -1,0 +1,29 @@
+.card {
+  padding: 20px;
+  background: var(--bg-primary);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card h4 {
+  margin: 0;
+  font-size: 1em;
+  color: #333;
+  font-weight: 600;
+}
+
+.value {
+  font-size: 2.2em;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.description {
+  margin: 0;
+  font-size: 0.85em;
+  color: #999;
+  line-height: 1.4;
+}
