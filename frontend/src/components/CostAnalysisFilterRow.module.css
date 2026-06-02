@@ -1,0 +1,282 @@
+.filterRow {
+  background: var(--bg-primary);
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.lineHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.lineNameInput {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.85em;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.lineNameInput:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow-10);
+}
+
+.rowActions {
+  display: flex;
+  gap: 8px;
+  margin-left: 12px;
+  align-items: center;
+}
+
+.colorPicker {
+  width: 32px;
+  height: 32px;
+  padding: 2px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.colorPicker:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-glow-10);
+}
+
+.actionButton {
+  padding: 4px 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: all 0.2s;
+}
+
+.actionButton:hover {
+  background: #eee;
+  border-color: #999;
+}
+
+.characterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.controlsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.controlsRow:last-child {
+  margin-bottom: 0;
+}
+
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.controlLabel {
+  font-size: 0.7em;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.selectedProfile {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  align-items: center;
+  position: relative;
+  flex-wrap: wrap;
+}
+
+.profileImage {
+  width: 70px;
+  height: 70px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 2px solid var(--accent);
+  flex-shrink: 0;
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.profileName {
+  font-weight: 600;
+  font-size: 1.1em;
+  color: var(--text-primary);
+}
+
+.profileActions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.profileInfo button {
+  padding: 6px 10px;
+  font-size: 0.85em;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.changeButton {
+  background: var(--accent);
+  color: white;
+}
+
+.changeButton:hover {
+  background: #5568d3;
+}
+
+.clearButton {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.clearButton:hover {
+  background: #ffcdd2;
+}
+
+.dropdownContent {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  margin-top: 4px;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 200px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.9em;
+  box-sizing: border-box;
+}
+
+.options {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.option {
+  padding: 8px 10px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background 0.15s;
+}
+
+.option:hover {
+  background: var(--bg-secondary);
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdownButton {
+  padding: 8px 10px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9em;
+  text-align: left;
+  transition: all 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.dropdownButton:hover {
+  border-color: var(--accent);
+  background: #f9f9f9;
+}
+
+.input,
+.select {
+  padding: 6px 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.85em;
+  background: var(--bg-primary);
+  transition: all 0.2s;
+}
+
+.input:hover,
+.select:hover {
+  border-color: var(--accent);
+}
+
+.input:focus,
+.select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow-10);
+}
+
+.input:disabled {
+  background: var(--bg-secondary);
+  color: #999;
+  cursor: not-allowed;
+}
+
+.checkboxGroup {
+  display: flex;
+  align-items: center;
+  padding-top: 4px;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--accent);
+}

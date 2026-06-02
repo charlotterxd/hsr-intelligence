@@ -1,0 +1,101 @@
+.container {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.title {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 30px 0;
+}
+
+.section {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.sectionChibi {
+  height: 160px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.sectionTitle {
+  font-size: 1.2em;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 0 0 12px 0;
+}
+
+.sectionDesc {
+  color: var(--text-secondary);
+  font-size: 0.95em;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+.table thead {
+  background: var(--bg-secondary);
+  border-bottom: 2px solid var(--border-color);
+}
+
+.table th {
+  padding: 12px 14px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.table thead tr th:first-child {
+  background: var(--accent);
+  color: white !important;
+}
+
+.table th {
+  background: var(--accent);
+  color: white !important;
+}
+
+.table td {
+  padding: 12px 14px;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.table tbody tr:nth-child(even) {
+  background: var(--bg-secondary);
+}
+
+.table tbody tr:hover {
+  background: var(--bg-secondary);
+}
+
+.bullets {
+  margin: 4px 0 0 0;
+  padding-left: 18px;
+}
+
+.bullets li {
+  margin: 4px 0;
+  color: var(--text-secondary);
+}

@@ -1,0 +1,562 @@
+.row {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  border-left: 5px solid var(--accent);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lineHeader {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.lineHeaderLeft {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  flex: 0 1 auto;
+}
+
+.lineHeaderRight {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  flex: 0 1 auto;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.formGroup label {
+  font-size: 0.8em;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.lineNameInput {
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.95em;
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 200px;
+}
+
+.lineNameInput:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow-10);
+}
+
+.colorPicker {
+  width: 50px;
+  height: 40px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.colorPicker:hover {
+  border-color: var(--accent);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.headerSelect {
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.95em;
+  background: var(--bg-primary);
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 120px;
+}
+
+.headerSelect:hover {
+  border-color: var(--accent);
+}
+
+.headerSelect:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow-10);
+}
+
+.slotsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.slotsLabel {
+  font-size: 0.8em;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.slotsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.excludeRow {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.slotWithTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.slotTitle {
+  font-size: 0.75em;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.slot {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.95em;
+  min-width: 180px;
+  flex: 1;
+}
+
+.characterSelect {
+  width: 100%;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.characterSelect {
+  position: relative;
+}
+
+.dropdownButton {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95em;
+  text-align: left;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.clearButton {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  cursor: pointer;
+  font-size: 1em;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.clearButton:hover {
+  color: #ff5252;
+  transform: translateY(-50%) scale(1.2);
+}
+
+.dropdownButton:hover {
+  border-color: var(--accent);
+  background: var(--bg-secondary);
+}
+
+.dropdownContent {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  margin-top: 4px;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.95em;
+  box-sizing: border-box;
+}
+
+.options {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.option {
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 0.95em;
+  transition: background 0.15s;
+}
+
+.option:hover {
+  background: var(--bg-secondary);
+}
+
+.option.selected {
+  background: var(--accent-glow-20);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.eidolon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9em;
+}
+
+.eidolon label {
+  font-weight: 600;
+  min-width: 35px;
+}
+
+.iconButton {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-size: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.iconButton:hover:not(:disabled) {
+  background: #5568d3;
+  transform: translateY(-1px);
+}
+
+.iconButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.iconButton.allActive {
+  background: #ff7c43;
+}
+
+.iconButton.allActive:hover {
+  background: #ff6b2c;
+}
+
+.signatureLc {
+  width: 100%;
+  display: flex;
+  gap: 6px;
+  justify-content: space-between;
+}
+
+.sigLabel {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.85em;
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-primary);
+  transition: all 0.15s;
+  text-align: center;
+  justify-content: center;
+}
+
+.sigLabel:hover {
+  border-color: var(--accent);
+  background: var(--bg-secondary);
+}
+
+.sigLabel input[type="radio"]:checked + span {
+  font-weight: 700;
+}
+
+.sigLabel input[type="radio"]:checked {
+  accent-color: var(--accent);
+}
+
+.sigRadio {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  margin: 0;
+}
+
+.excludeCompact {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px;
+  min-width: 180px;
+  flex: 0 0 auto;
+}
+
+.excludeCompact .dropdownButton {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 0.95em;
+}
+
+.excludeCompact .dropdownButton {
+  padding: 10px 14px;
+  font-size: 1em;
+}
+
+.excludedTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  flex: 1;
+}
+
+.tag {
+  background: #ffebee;
+  border: 1px solid #ffcdd2;
+  border-radius: 16px;
+  padding: 4px 10px;
+  font-size: 0.8em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #c62828;
+}
+
+.removeTag {
+  background: none;
+  border: none;
+  color: #c62828;
+  cursor: pointer;
+  font-size: 1.1em;
+  padding: 0;
+  line-height: 1;
+  transition: all 0.15s;
+}
+
+.removeTag:hover {
+  color: #b71c1c;
+  transform: scale(1.2);
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.controls select {
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.95em;
+  background: var(--bg-primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.controls select:hover {
+  border-color: var(--accent);
+}
+
+.controls select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow-10);
+}
+
+.lineActions {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.copyButton {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  font-size: 1.2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.copyButton:hover {
+  background: #5568d3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--accent-glow-30);
+}
+
+.copyButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.removeButton {
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  font-size: 1.2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.removeButton:hover {
+  background: #ff5252;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+
+/* Character Profile Styles */
+.selectedProfile {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.profileImage {
+  width: 80px;
+  height: 80px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 2px solid var(--accent);
+  box-shadow: 0 2px 8px var(--accent-glow-20);
+  flex-shrink: 0;
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+  flex: 1;
+}
+
+.profileName {
+  font-weight: 600;
+  font-size: 1em;
+  color: var(--text-primary);
+}
+
+.profileActions {
+  display: flex;
+  gap: 6px;
+}
+
+.changeButton {
+  flex: 1;
+  padding: 6px 10px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-weight: 500;
+}
+
+.changeButton:hover {
+  background: #5568d3;
+  transform: translateY(-1px);
+}
+
+.profileActions .clearButton {
+  position: static;
+  transform: none;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+@media (max-width: 1200px) {
+  .slots {
+    min-width: 300px;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+
+  .slots {
+    flex: 1;
+    width: 100%;
+  }
+}
