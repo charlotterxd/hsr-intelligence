@@ -81,6 +81,39 @@ export default function Home({ onNavigate }) {
         </div>
       </div>
 
+      <div className={styles.tierlistPromo}>
+        <div className={styles.tierlistPromoText}>
+          <p className={styles.tierlistPromoLabel}>New · Resources</p>
+          <h2 className={styles.tierlistPromoTitle}>Data-Driven Tier List — Zero Human Opinion</h2>
+          <p className={styles.tierlistPromoDesc}>
+            Most tier lists are made by a handful of people with their own biases. Ours is different.
+            Every ranking is computed directly from thousands of real player clears — no content creator, no committee, no gut feeling.
+            If a character ranks high, it's because players are actually clearing with them.
+          </p>
+          <div className={styles.exclusionPitch}>
+            <span className={styles.exclusionPitchIcon}>🔍</span>
+            <div>
+              <strong>Don't own a key support? Filter them out.</strong>
+              <span> Exclude any character and watch the tier list recalculate instantly — only using teams that never had that unit.
+              Curious how Castorice performs without Hyacine? Exclude her and find out.
+              It's the only tier list that answers <em>"how good is X for players who don't have Y?"</em></span>
+            </div>
+          </div>
+          <div className={styles.tierlistPromoPoints}>
+            <span className={styles.promoPoint}>Based on real clear data</span>
+            <span className={styles.promoPoint}>E0 only — no whale bias</span>
+            <span className={styles.promoPoint}>Covers AA, AS, PF & Overall</span>
+            <span className={styles.promoPoint}>Exclude any character</span>
+            <span className={styles.promoPoint}>Updated per patch</span>
+          </div>
+        </div>
+        <div className={styles.tierlistPromoAction}>
+          <button className={styles.tierlistPromoBtn} onClick={() => onNavigate('tierList')}>
+            View Tier List →
+          </button>
+        </div>
+      </div>
+
       <h2 className={styles.sectionTitle}>Game Modes</h2>
       <div className={styles.grid}>
         {GAME_MODES.map((mode) => (

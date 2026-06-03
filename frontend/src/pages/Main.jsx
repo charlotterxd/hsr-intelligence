@@ -23,6 +23,7 @@ import AADistributionGrid from '../components/AADistributionGrid'
 import AAHardModeStats from '../components/AAHardModeStats'
 import AAPeasantModeStats from '../components/AAPeasantModeStats'
 import Methodologies from '../components/Methodologies'
+import TierList from '../components/TierList'
 import Home from '../components/Home'
 import styles from './Main.module.css'
 
@@ -308,6 +309,12 @@ export default function Main() {
                   Anomaly Arbitration
                 </button>
                 <div className={styles.sidebarSection}>Resources</div>
+                <button
+                  className={`${styles.modeTab} ${gameMode === 'tierList' ? styles.activeModeTab : ''}`}
+                  onClick={() => setGameMode('tierList')}
+                >
+                  Tier List
+                </button>
                 <button
                   className={`${styles.modeTab} ${gameMode === 'methodologies' ? styles.activeModeTab : ''}`}
                   onClick={() => setGameMode('methodologies')}
@@ -999,6 +1006,10 @@ export default function Main() {
 
         {gameMode === 'methodologies' && (
           <Methodologies />
+        )}
+
+        {gameMode === 'tierList' && (
+          <TierList characters={characters} />
         )}
       </div>
       </div>

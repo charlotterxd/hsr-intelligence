@@ -5,6 +5,104 @@ from typing import List
 from app.db.models import CharacterInfo
 
 
+def get_all_patches_aa_tierlist(db: Session) -> List[str]:
+    """Get all distinct patches from player_records_anomaly, sorted numerically"""
+    sql = text("SELECT DISTINCT version FROM player_records_anomaly ORDER BY version ASC")
+    patches = db.execute(sql).fetchall()
+    patch_strs = [str(p[0]) for p in patches]
+    patch_strs.sort(key=lambda v: float(v))
+    return patch_strs
+
+
+def get_tierlist_aa(
+    db: Session,
+    patch: str = None,
+    excluded_characters: List[str] = None,
+    signature_only: bool = False,
+    min_samples: int = 30
+) -> List[dict]:
+    """Get tier list data for AA (knights floors 1-3) at E0 — median total cycles per character (lower is better)"""
+    if excluded_characters is None:
+        excluded_characters = []
+
+    patch_filter = f"AND version = {float(patch)}" if patch else ""
+    patch_clause = f"AND r.version = {float(patch)}" if patch else ""
+
+    sig_clause = ""
+    if signature_only:
+        sig_clause = "AND ci.signature IS NOT NULL AND ci.signature != '' AND r.weapon = ci.signature"
+
+    # Pre-compute excluded teams as CTEs (anti-join is far faster than correlated NOT EXISTS)
+    excluded_user_cte = ""
+    excluded_user_join = ""
+    if excluded_characters:
+        names = ','.join([f"'{n.replace(chr(39), chr(39)*2)}'" for n in excluded_characters])
+        excluded_user_cte = f"""
+        excluded_by_user AS (
+            SELECT DISTINCT uid, version, team_id
+            FROM player_records_anomaly
+            WHERE name IN ({names}) {patch_filter}
+        ),"""
+        excluded_user_join = "LEFT JOIN excluded_by_user eu ON eu.uid = r.uid AND eu.version = r.version AND eu.team_id = r.team_id"
+
+    excluded_user_filter = "AND eu.uid IS NULL" if excluded_characters else ""
+
+    sql = text(f"""
+        WITH
+        excluded_by_limited AS (
+            SELECT DISTINCT pr_e.uid, pr_e.version, pr_e.team_id
+            FROM player_records_anomaly pr_e
+            INNER JOIN character_info ci_e ON ci_e.name = pr_e.name
+            WHERE ci_e.availability = 'Limited 5*'
+              AND pr_e.cons > 0
+              {patch_filter}
+        ),
+        {excluded_user_cte}
+        char_appearances AS (
+            SELECT DISTINCT
+                r.uid, r.version, r.team_id, r.floor, r.name, r.round_num
+            FROM player_records_anomaly r
+            INNER JOIN character_info ci ON ci.name = r.name
+            LEFT JOIN excluded_by_limited el ON el.uid = r.uid AND el.version = r.version AND el.team_id = r.team_id
+            {excluded_user_join}
+            WHERE r.floor IN (1, 2, 3)
+              AND r.cons = 0
+              {sig_clause}
+              {patch_clause}
+              AND el.uid IS NULL
+              {excluded_user_filter}
+        )
+        SELECT
+            ca.name,
+            ci.id,
+            ci.role,
+            ci.element,
+            PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY ca.round_num) AS median_score,
+            COUNT(DISTINCT (ca.uid, ca.version, ca.team_id)) AS sample_count
+        FROM char_appearances ca
+        INNER JOIN character_info ci ON ci.name = ca.name
+        GROUP BY ca.name, ci.id, ci.role, ci.element
+        HAVING COUNT(DISTINCT (ca.uid, ca.version, ca.team_id)) > :min_samples
+        ORDER BY median_score ASC
+    """)
+
+    rows = db.execute(sql, {"min_samples": min_samples}).fetchall()
+
+    results = []
+    for row in rows:
+        name, char_id, role, element, median_score, sample_count = row
+        results.append({
+            "name": name,
+            "id": char_id,
+            "role": role or "Unknown",
+            "element": element or "Unknown",
+            "median_score": round(float(median_score), 2),
+            "sample_count": int(sample_count)
+        })
+
+    return results
+
+
 def get_available_patches_aa(db: Session, character_name: str) -> List[str]:
     """Get all patches where a character appears in AA, sorted"""
     sql = text("""

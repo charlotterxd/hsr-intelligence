@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.db import crud
-from app.schemas import TrendRequest, TrendResponse, CharacterInfoResponse, CostAnalysisRequest, CostBinResult, SurvivalAnalysisRequest, SurvivalBinResult, AARequest, AAAvgResult, AADistributionResult, AAHardModeStatsRequest, AAHardModeStatsResult, AATopDPSCharacter
+from app.schemas import TrendRequest, TrendResponse, CharacterInfoResponse, CostAnalysisRequest, CostBinResult, SurvivalAnalysisRequest, SurvivalBinResult, AARequest, AAAvgResult, AADistributionResult, AAHardModeStatsRequest, AAHardModeStatsResult, AATopDPSCharacter, TierListRequest, TierListEntry
 import time
 import logging
 from concurrent.futures import ThreadPoolExecutor
@@ -353,6 +353,160 @@ async def get_aa_hard_mode_stats(
     print(f"[TIMING] AA hard mode stats (patch={request.patch}): time={elapsed:.2f}s")
 
     return result
+
+
+@router.get("/tierlist/as/patches")
+async def get_as_tierlist_patches(db: Session = Depends(get_db)):
+    """Get all distinct patches from AS data, for tier list"""
+    from app.db import crud_as
+    loop = asyncio.get_event_loop()
+    patches = await loop.run_in_executor(
+        executor,
+        lambda: crud_as.get_all_patches_as(db)
+    )
+    return {"patches": patches}
+
+
+@router.post("/tierlist/as", response_model=list[TierListEntry])
+async def get_as_tierlist(
+    request: TierListRequest,
+    db: Session = Depends(get_db)
+):
+    """Get tier list data for Apocalyptic Shadow at E0S1 (cons=0, signature weapon)"""
+    start_time = time.time()
+    from app.db import crud_as
+    loop = asyncio.get_event_loop()
+
+    results = await loop.run_in_executor(
+        executor,
+        lambda: crud_as.get_tierlist_as(
+            db,
+            patch=request.patch,
+            excluded_characters=request.excluded_characters,
+            signature_only=request.signature_only
+        )
+    )
+
+    elapsed = time.time() - start_time
+    print(f"[TIMING] AS Tierlist (patch={request.patch}, excluded={len(request.excluded_characters)}): time={elapsed:.2f}s, results={len(results)}")
+
+    return results
+
+
+@router.get("/tierlist/pf/patches")
+async def get_pf_tierlist_patches(db: Session = Depends(get_db)):
+    """Get all distinct patches from PF data, for tier list"""
+    loop = asyncio.get_event_loop()
+    patches = await loop.run_in_executor(
+        executor,
+        lambda: crud.get_all_patches_pf_tierlist(db)
+    )
+    return {"patches": patches}
+
+
+@router.post("/tierlist/pf", response_model=list[TierListEntry])
+async def get_pf_tierlist(
+    request: TierListRequest,
+    db: Session = Depends(get_db)
+):
+    """Get tier list data for Pure Fiction at E0, optionally signature only"""
+    start_time = time.time()
+    loop = asyncio.get_event_loop()
+
+    results = await loop.run_in_executor(
+        executor,
+        lambda: crud.get_tierlist_pf(
+            db,
+            patch=request.patch,
+            excluded_characters=request.excluded_characters,
+            signature_only=request.signature_only
+        )
+    )
+
+    elapsed = time.time() - start_time
+    print(f"[TIMING] PF Tierlist (patch={request.patch}, excluded={len(request.excluded_characters)}): time={elapsed:.2f}s, results={len(results)}")
+
+    return results
+
+
+@router.get("/tierlist/moc/patches")
+async def get_moc_tierlist_patches(db: Session = Depends(get_db)):
+    from app.db import crud_moc
+    loop = asyncio.get_event_loop()
+    patches = await loop.run_in_executor(executor, lambda: crud_moc.get_all_patches_moc_tierlist(db))
+    return {"patches": patches}
+
+
+@router.post("/tierlist/moc", response_model=list[TierListEntry])
+async def get_moc_tierlist(request: TierListRequest, db: Session = Depends(get_db)):
+    start_time = time.time()
+    from app.db import crud_moc
+    loop = asyncio.get_event_loop()
+    results = await loop.run_in_executor(
+        executor,
+        lambda: crud_moc.get_tierlist_moc(
+            db,
+            patch=request.patch,
+            excluded_characters=request.excluded_characters,
+            signature_only=request.signature_only
+        )
+    )
+    print(f"[TIMING] MOC Tierlist (patch={request.patch}): time={time.time()-start_time:.2f}s, results={len(results)}")
+    return results
+
+
+@router.get("/tierlist/aa/patches")
+async def get_aa_tierlist_patches(db: Session = Depends(get_db)):
+    from app.db import crud_aa
+    loop = asyncio.get_event_loop()
+    patches = await loop.run_in_executor(executor, lambda: crud_aa.get_all_patches_aa_tierlist(db))
+    return {"patches": patches}
+
+
+@router.post("/tierlist/aa", response_model=list[TierListEntry])
+async def get_aa_tierlist(request: TierListRequest, db: Session = Depends(get_db)):
+    start_time = time.time()
+    from app.db import crud_aa
+    loop = asyncio.get_event_loop()
+    results = await loop.run_in_executor(
+        executor,
+        lambda: crud_aa.get_tierlist_aa(
+            db,
+            patch=request.patch,
+            excluded_characters=request.excluded_characters,
+            signature_only=request.signature_only
+        )
+    )
+    print(f"[TIMING] AA Tierlist (patch={request.patch}): time={time.time()-start_time:.2f}s, results={len(results)}")
+    return results
+
+
+@router.get("/tierlist/overall/patches")
+async def get_overall_tierlist_patches(db: Session = Depends(get_db)):
+    """Distinct patches >= 3.6 from any of AS/PF/AA, for overall tier list"""
+    from app.db import crud_overall
+    loop = asyncio.get_event_loop()
+    patches = await loop.run_in_executor(executor, lambda: crud_overall.get_overall_patches(db))
+    return {"patches": patches}
+
+
+@router.post("/tierlist/overall", response_model=list[TierListEntry])
+async def get_overall_tierlist(request: TierListRequest, db: Session = Depends(get_db)):
+    """Overall tier list combining AA (50%), AS (30%), PF (20%) — one patch at a time"""
+    start_time = time.time()
+    from app.db import crud_overall
+    loop = asyncio.get_event_loop()
+    results = await loop.run_in_executor(
+        executor,
+        lambda: crud_overall.get_tierlist_overall(
+            db,
+            patch=request.patch,
+            excluded_characters=request.excluded_characters,
+            signature_only=request.signature_only
+        )
+    )
+    print(f"[TIMING] Overall Tierlist (patch={request.patch}, excluded={len(request.excluded_characters)}): time={time.time()-start_time:.2f}s, results={len(results)}")
+    return results
 
 
 @router.get("/aa/peasant-mode-stats")

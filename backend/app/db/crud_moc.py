@@ -188,6 +188,98 @@ def get_score_trends_moc(
     return results
 
 
+def get_all_patches_moc_tierlist(db: Session) -> List[str]:
+    """Get all distinct patches from player_records_moc, sorted numerically"""
+    sql = text("SELECT DISTINCT version FROM player_records_moc ORDER BY version ASC")
+    patches = db.execute(sql).fetchall()
+    patch_strs = [str(p[0]) for p in patches]
+    patch_strs.sort(key=lambda v: float(v))
+    return patch_strs
+
+
+def get_tierlist_moc(
+    db: Session,
+    patch: str = None,
+    excluded_characters: List[str] = None,
+    signature_only: bool = False,
+    min_samples: int = 30
+) -> List[dict]:
+    """Get tier list data for MOC at E0 — median cycles per character (lower is better)"""
+    if excluded_characters is None:
+        excluded_characters = []
+
+    patch_clause = ""
+    if patch:
+        patch_clause = f"AND r.version = {float(patch)}"
+
+    exclude_clause = ""
+    if excluded_characters:
+        names = ','.join([f"'{n.replace(chr(39), chr(39)*2)}'" for n in excluded_characters])
+        exclude_clause = f"""AND NOT EXISTS (
+              SELECT 1 FROM player_records_moc pr_exc
+              WHERE pr_exc.uid = r.uid
+                AND pr_exc.version = r.version
+                AND pr_exc.node = r.node
+                AND pr_exc.name IN ({names})
+          )"""
+
+    sig_clause = ""
+    if signature_only:
+        sig_clause = "AND ci.signature IS NOT NULL AND ci.signature != '' AND r.weapon = ci.signature"
+
+    sql = text(f"""
+        WITH filtered_nodes AS (
+            SELECT DISTINCT
+                r.uid, r.version, r.node, r.round_num,
+                r.name
+            FROM player_records_moc r
+            INNER JOIN character_info ci ON ci.name = r.name
+            WHERE r.cons = 0
+              AND r.round_num >= 0
+              {sig_clause}
+              {patch_clause}
+              {exclude_clause}
+              AND NOT EXISTS (
+                  SELECT 1 FROM player_records_moc pr_e
+                  INNER JOIN character_info ci_e ON ci_e.name = pr_e.name
+                  WHERE pr_e.uid = r.uid
+                    AND pr_e.version = r.version
+                    AND pr_e.node = r.node
+                    AND ci_e.availability = 'Limited 5*'
+                    AND pr_e.cons > 0
+              )
+        )
+        SELECT
+            fn.name,
+            ci.id,
+            ci.role,
+            ci.element,
+            AVG(fn.round_num) AS mean_score,
+            COUNT(*) AS sample_count
+        FROM filtered_nodes fn
+        INNER JOIN character_info ci ON ci.name = fn.name
+        GROUP BY fn.name, ci.id, ci.role, ci.element
+        HAVING COUNT(*) > :min_samples
+        ORDER BY mean_score ASC
+    """)
+
+    rows = db.execute(sql, {"min_samples": min_samples}).fetchall()
+
+    results = []
+    for row in rows:
+        name, char_id, role, element, mean_score, sample_count = row
+        results.append({
+            "name": name,
+            "id": char_id,
+            "role": role or "Unknown",
+            "element": element or "Unknown",
+            "median_score": round(float(mean_score), 2),
+            "sample_count": int(sample_count)
+        })
+
+    return results
+
+
 def get_available_patches_moc(db: Session, character_name: str) -> List[str]:
     """Get all patches where a character appears in MOC, sorted"""
     sql = text("""

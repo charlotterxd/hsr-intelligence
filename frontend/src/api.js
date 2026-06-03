@@ -172,4 +172,111 @@ export const getAAPeasantModeStats = async () => {
   }
 }
 
+export const getPFTierListPatches = async () => {
+  try {
+    const response = await api.get('/api/tierlist/pf/patches')
+    return response.data.patches || []
+  } catch (error) {
+    console.error('getPFTierListPatches error:', error)
+    throw new Error(error.response?.data?.detail || error.message || 'Failed to fetch PF patches')
+  }
+}
+
+export const getPFTierList = async (patch, excludedCharacters = [], signatureOnly = false) => {
+  try {
+    const response = await api.post('/api/tierlist/pf', {
+      patch: patch || null,
+      excluded_characters: excludedCharacters,
+      signature_only: signatureOnly
+    })
+    return response.data || []
+  } catch (error) {
+    console.error('getPFTierList error:', error)
+    throw new Error(error.response?.data?.detail || error.message || 'Failed to fetch PF tier list')
+  }
+}
+
+export const getMOCTierListPatches = async () => {
+  try {
+    const response = await api.get('/api/tierlist/moc/patches')
+    return response.data.patches || []
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || error.message)
+  }
+}
+
+export const getMOCTierList = async (patch, excludedCharacters = [], signatureOnly = false) => {
+  try {
+    const response = await api.post('/api/tierlist/moc', { patch: patch || null, excluded_characters: excludedCharacters, signature_only: signatureOnly })
+    return response.data || []
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || error.message)
+  }
+}
+
+export const getAATierListPatches = async () => {
+  try {
+    const response = await api.get('/api/tierlist/aa/patches')
+    return response.data.patches || []
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || error.message)
+  }
+}
+
+export const getAATierList = async (patch, excludedCharacters = [], signatureOnly = false) => {
+  try {
+    const response = await api.post('/api/tierlist/aa', { patch: patch || null, excluded_characters: excludedCharacters, signature_only: signatureOnly })
+    return response.data || []
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || error.message)
+  }
+}
+
+export const getASTierListPatches = async () => {
+  try {
+    const response = await api.get('/api/tierlist/as/patches')
+    return response.data.patches || []
+  } catch (error) {
+    console.error('getASTierListPatches error:', error)
+    throw new Error(error.response?.data?.detail || error.message || 'Failed to fetch AS patches')
+  }
+}
+
+export const getASTierList = async (patch, excludedCharacters = [], signatureOnly = false) => {
+  try {
+    const response = await api.post('/api/tierlist/as', {
+      patch: patch || null,
+      excluded_characters: excludedCharacters,
+      signature_only: signatureOnly
+    })
+    return response.data || []
+  } catch (error) {
+    console.error('getASTierList error:', error)
+    throw new Error(error.response?.data?.detail || error.message || 'Failed to fetch tier list')
+  }
+}
+
+export const getOverallTierListPatches = async () => {
+  try {
+    const response = await api.get('/api/tierlist/overall/patches')
+    return response.data.patches || []
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || error.message)
+  }
+}
+
+export const getOverallTierList = async (patch, excludedCharacters = [], signatureOnly = false) => {
+  try {
+    const response = await api.post('/api/tierlist/overall', {
+      patch: patch || null,
+      excluded_characters: excludedCharacters,
+      signature_only: signatureOnly
+    })
+    return response.data || []
+  } catch (error) {
+    console.error('getOverallTierList error:', error)
+    throw new Error(error.response?.data?.detail || error.message || 'Failed to fetch overall tier list')
+  }
+}
+
 export default api

@@ -123,3 +123,18 @@ class AATopDPSCharacter(BaseModel):
 class AAHardModeStatsResult(BaseModel):
     passing_rate: float
     top_dps: List[AATopDPSCharacter]
+
+
+class TierListRequest(BaseModel):
+    patch: Optional[str] = None
+    excluded_characters: List[str] = []
+    signature_only: bool = False
+
+
+class TierListEntry(BaseModel):
+    name: str
+    id: int
+    role: str
+    element: Optional[str] = None
+    median_score: float
+    sample_count: int

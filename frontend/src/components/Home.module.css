@@ -184,6 +184,116 @@
   margin: 0;
 }
 
+.tierlistPromo {
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--accent-glow-10) 100%);
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.tierlistPromoText {
+  flex: 1;
+}
+
+.tierlistPromoLabel {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--accent);
+  margin: 0 0 8px 0;
+}
+
+.tierlistPromoTitle {
+  font-size: 1.4em;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 10px 0;
+}
+
+.tierlistPromoDesc {
+  font-size: 0.88em;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.exclusionPitch {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-top: 14px;
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.exclusionPitchIcon {
+  font-size: 1.2em;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.exclusionPitch strong {
+  color: var(--text-primary);
+}
+
+.tierlistPromoPoints {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.promoPoint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82em;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 4px 12px;
+}
+
+.promoPoint::before {
+  content: '✓';
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.tierlistPromoAction {
+  flex-shrink: 0;
+}
+
+.tierlistPromoBtn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 28px;
+  font-size: 0.95em;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+}
+
+.tierlistPromoBtn:hover {
+  opacity: 0.85;
+}
+
 .note {
   text-align: center;
   color: var(--text-secondary);
