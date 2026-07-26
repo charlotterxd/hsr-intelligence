@@ -460,7 +460,15 @@ def get_score_trends_aa(
         WHERE name IN ({exclude_names_list}){floor_condition}
     ),
     """
-        excluded_teams_filter = "AND (uid, version, floor) NOT IN (SELECT uid, version, floor FROM excluded_teams)"
+        # NOT EXISTS (not NOT IN): a multi-column NOT IN subquery can't be planned as a hash
+        # anti-join due to NULL semantics, so Postgres re-scans excluded_teams per outer row -
+        # this was the actual "minutes" slowdown (quadratic, independent of the sustain filter).
+        excluded_teams_filter = """AND NOT EXISTS (
+            SELECT 1 FROM excluded_teams et
+            WHERE et.uid = player_records_anomaly.uid
+              AND et.version = player_records_anomaly.version
+              AND et.floor = player_records_anomaly.floor
+        )"""
 
     # Build optimized signature filtering - apply early to raw data
     sig_where_clause = ""
@@ -479,7 +487,9 @@ def get_score_trends_aa(
     sig_cte_clause = ""
     sig_clause = sig_where_clause
 
-    # Add sustain filter to SQL
+    # Add sustain filter to SQL. Only applied inside node_teams: sustain status is purely a
+    # function of (uid, version, floor), so re-checking it again in the final SELECT (as the
+    # old code did, doubling the cost) is redundant once node_teams has already filtered on it.
     sustain_clause = ""
     if sustain_filter != "Both":
         if sustain_filter == "Yes":
@@ -517,7 +527,8 @@ def get_score_trends_aa(
         eidolon_clause = f" AND ({char_eidolon_filter})"
 
     sql = f"""
-    WITH {excluded_teams_cte}{sig_cte_clause}{',' if sig_cte_clause else ''}node_teams AS (
+    WITH {excluded_teams_cte}{sig_cte_clause}{',' if sig_cte_clause else ''}
+    node_teams AS (
         SELECT uid, version, floor, COUNT(DISTINCT name) as char_count
         FROM player_records_anomaly
         WHERE name IN ({char_names_list}){eidolon_clause}{sustain_clause}{floor_condition}{sig_clause}
@@ -527,7 +538,7 @@ def get_score_trends_aa(
     )
     SELECT version, round_num
     FROM player_records_anomaly
-    WHERE (uid, version, floor) IN (SELECT uid, version, floor FROM node_teams){eidolon_clause}{sustain_clause}{floor_condition}{sig_clause}
+    WHERE (uid, version, floor) IN (SELECT uid, version, floor FROM node_teams){eidolon_clause}{floor_condition}{sig_clause}
     """
 
     rows = db.execute(text(sql)).fetchall()

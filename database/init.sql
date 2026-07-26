@@ -37,6 +37,7 @@ CREATE INDEX IF NOT EXISTS idx_player_records_pf_version ON player_records_pf(ve
 CREATE INDEX IF NOT EXISTS idx_player_records_pf_name ON player_records_pf(name);
 CREATE INDEX IF NOT EXISTS idx_player_records_pf_uid ON player_records_pf(uid);
 CREATE INDEX IF NOT EXISTS idx_character_info_slug ON character_info(slug);
+CREATE INDEX IF NOT EXISTS idx_character_info_name ON character_info(name);
 
 -- Create player_records_moc table
 CREATE TABLE IF NOT EXISTS player_records_moc (
@@ -91,6 +92,9 @@ CREATE TABLE IF NOT EXISTS player_records_anomaly (
 CREATE INDEX IF NOT EXISTS idx_player_records_anomaly_version ON player_records_anomaly(version);
 CREATE INDEX IF NOT EXISTS idx_player_records_anomaly_floor ON player_records_anomaly(floor);
 CREATE INDEX IF NOT EXISTS idx_player_records_anomaly_name ON player_records_anomaly(name);
+CREATE INDEX IF NOT EXISTS idx_pra_uid_version_teamid ON player_records_anomaly(uid, version, team_id);
+CREATE INDEX IF NOT EXISTS idx_pra_uid_version_teamid_name ON player_records_anomaly(uid, version, team_id, name);
+CREATE INDEX IF NOT EXISTS idx_pra_uid_version_floor ON player_records_anomaly(uid, version, floor);
 
 -- Verify tables created
 SELECT 'character_info' as table_name, COUNT(*) as row_count FROM character_info
