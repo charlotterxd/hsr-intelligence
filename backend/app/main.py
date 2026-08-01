@@ -24,7 +24,7 @@ app = FastAPI(title="HSR PF Visualizer API", lifespan=lifespan)
 # CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000", "https://hsr-intelligence.vercel.app"],
+    allow_origins=["http://localhost:5173", "http://localhost:3000", "https://hsr-intelligence.vercel.app", "http://hsr-intelligence.home"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

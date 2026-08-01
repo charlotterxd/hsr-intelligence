@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database
+postgres_data/
+
+# Data files (large CSVs — obtain separately)
+.data/
+
+# Inspection scripts (helpers, not to be committed)
+inspect_char_data.py
+inspect_pf_data.py
+
+# Internal project files
+.memory/
+.project_requirements/
+.claude/
+CLAUDE.md
+PRD.md
