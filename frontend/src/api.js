@@ -42,6 +42,17 @@ export const getSurvivalAnalysis = async (params, gameMode = 'pureFiction') => {
   }
 }
 
+export const getUsageTrend = async (character, gameMode = 'pureFiction', floorType = null) => {
+  try {
+    const payload = { character, gameMode, floor_type: floorType }
+    const response = await api.post('/api/usage-trend', payload)
+    return response.data || []
+  } catch (error) {
+    console.error('getUsageTrend error:', error)
+    throw new Error(error.response?.data?.detail || error.message || 'Failed to fetch usage trend')
+  }
+}
+
 export const getCharacters = async () => {
   try {
     const response = await api.get('/api/characters')

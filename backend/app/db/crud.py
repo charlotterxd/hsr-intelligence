@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func, and_, text, tuple_
 from app.db.models import CharacterInfo, PlayerRecord
+from app.db.query_cache import get_cached
 from typing import List, Optional
 import math
 
@@ -652,3 +653,46 @@ def get_survival_analysis(
         })
 
     return results
+
+
+def _get_pf_totals(db: Session) -> dict:
+    """Distinct players per patch, for Pure Fiction. Character-agnostic, cached."""
+    sql = text("""
+        SELECT version, COUNT(DISTINCT uid) AS total_count
+        FROM player_records_pf
+        GROUP BY version
+        ORDER BY version
+    """)
+    return {str(version): int(total) for version, total in db.execute(sql).fetchall()}
+
+
+def get_usage_trend(db: Session, character_name: str) -> List[dict]:
+    """
+    Get the percentage of players using a character each patch, for Pure Fiction.
+    Denominator = distinct players (uid) with any record that patch (cached,
+    identical across characters). Numerator = distinct players who used the
+    character that patch (queried live, scoped by the name index).
+    """
+    totals = get_cached(("usage_trend_totals", "pf"), lambda: _get_pf_totals(db))
+
+    sql = text("""
+        SELECT version, COUNT(DISTINCT uid) AS char_count
+        FROM player_records_pf
+        WHERE name = :name
+        GROUP BY version
+    """)
+    char_counts = {str(version): int(count) for version, count in db.execute(sql, {"name": character_name}).fetchall()}
+
+    results = []
+    for version, total_count in totals.items():
+        char_count = char_counts.get(version, 0)
+        pct = (char_count / total_count * 100) if total_count else 0.0
+        results.append({
+            "version": version,
+            "score": round(pct, 2),
+            "count": char_count
+        })
+
+    # Trim leading patches from before the character existed
+    first_seen = next((i for i, r in enumerate(results) if r["count"] > 0), None)
+    return results[first_seen:] if first_seen is not None else []

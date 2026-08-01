@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.db import crud
-from app.schemas import TrendRequest, TrendResponse, CharacterInfoResponse, CostAnalysisRequest, CostBinResult, SurvivalAnalysisRequest, SurvivalBinResult, AARequest, AAAvgResult, AADistributionResult, AAHardModeStatsRequest, AAHardModeStatsResult, AATopDPSCharacter, TierListRequest, TierListEntry
+from app.schemas import TrendRequest, TrendResponse, CharacterInfoResponse, CostAnalysisRequest, CostBinResult, SurvivalAnalysisRequest, SurvivalBinResult, AARequest, AAAvgResult, AADistributionResult, AAHardModeStatsRequest, AAHardModeStatsResult, AATopDPSCharacter, TierListRequest, TierListEntry, UsageTrendRequest, UsageTrendResult
 import time
 import logging
 from concurrent.futures import ThreadPoolExecutor
@@ -506,6 +506,49 @@ async def get_overall_tierlist(request: TierListRequest, db: Session = Depends(g
         )
     )
     print(f"[TIMING] Overall Tierlist (patch={request.patch}, excluded={len(request.excluded_characters)}): time={time.time()-start_time:.2f}s, results={len(results)}")
+    return results
+
+
+@router.post("/usage-trend", response_model=list[UsageTrendResult])
+async def get_usage_trend(
+    request: UsageTrendRequest,
+    db: Session = Depends(get_db)
+):
+    """
+    Get the percentage of players using a character across patches.
+    Supports Pure Fiction, Apocalyptic Shadow, Memory of Chaos, and Anomaly Arbitration via gameMode parameter.
+    For Anomaly Arbitration, floor_type ("knights" or "king_normal") is required.
+    """
+    start_time = time.time()
+
+    if not request.character:
+        raise HTTPException(status_code=400, detail="character is required")
+
+    if request.gameMode not in ["pureFiction", "apocalypticShadow", "memoryOfChaos", "anomalyArbitration"]:
+        raise HTTPException(status_code=400, detail="gameMode must be 'pureFiction', 'apocalypticShadow', 'memoryOfChaos', or 'anomalyArbitration'")
+
+    if request.gameMode == "anomalyArbitration" and request.floor_type not in ["knights", "king_normal"]:
+        raise HTTPException(status_code=400, detail="floor_type must be 'knights' or 'king_normal' for Anomaly Arbitration")
+
+    loop = asyncio.get_event_loop()
+
+    if request.gameMode == "apocalypticShadow":
+        from app.db import crud_as
+        result_future = loop.run_in_executor(executor, lambda: crud_as.get_usage_trend_as(db, request.character))
+    elif request.gameMode == "memoryOfChaos":
+        from app.db import crud_moc
+        result_future = loop.run_in_executor(executor, lambda: crud_moc.get_usage_trend_moc(db, request.character))
+    elif request.gameMode == "anomalyArbitration":
+        from app.db import crud_aa
+        result_future = loop.run_in_executor(executor, lambda: crud_aa.get_usage_trend_aa(db, request.character, request.floor_type))
+    else:
+        result_future = loop.run_in_executor(executor, lambda: crud.get_usage_trend(db, request.character))
+
+    results = await result_future
+
+    elapsed = time.time() - start_time
+    print(f"[TIMING] Usage trend ({request.gameMode}): char={request.character}, time={elapsed:.2f}s, results={len(results)}")
+
     return results
 
 

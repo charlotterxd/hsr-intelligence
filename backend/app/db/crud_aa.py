@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text, func
 from typing import List
 from app.db.models import CharacterInfo
+from app.db.query_cache import get_cached
 
 
 def get_all_patches_aa_tierlist(db: Session) -> List[str]:
@@ -1101,3 +1102,59 @@ def get_peasant_mode_stats(db: Session) -> dict:
         result['avg_cost'].append({'version': version, 'value': c_val})
 
     return result
+
+
+def _get_aa_totals(db: Session, floor_condition: str) -> dict:
+    """Distinct players per patch, for one AA floor group. Character-agnostic, cached."""
+    sql = text(f"""
+        SELECT version, COUNT(DISTINCT uid) AS total_count
+        FROM player_records_anomaly
+        WHERE {floor_condition}
+        GROUP BY version
+        ORDER BY version
+    """)
+    return {str(version): int(total) for version, total in db.execute(sql).fetchall()}
+
+
+def get_usage_trend_aa(db: Session, character_name: str, floor_type: str) -> List[dict]:
+    """
+    Get the percentage of players using a character each patch, for Anomaly Arbitration.
+    floor_type: "knights" (floors 1-3) or "king_normal" (floor 4)
+    Denominator = distinct players (uid) with any record in that floor group that
+    patch (cached, identical across characters). Numerator = distinct players who
+    used the character in that floor group that patch (queried live, scoped by
+    the name index).
+    """
+    if floor_type == "knights":
+        floor_condition = "floor IN (1, 2, 3)"
+    elif floor_type == "king_normal":
+        floor_condition = "floor = 4"
+    else:
+        raise ValueError("floor_type must be 'knights' or 'king_normal'")
+
+    totals = get_cached(
+        ("usage_trend_totals", "aa", floor_type),
+        lambda: _get_aa_totals(db, floor_condition)
+    )
+
+    sql = text(f"""
+        SELECT version, COUNT(DISTINCT uid) AS char_count
+        FROM player_records_anomaly
+        WHERE {floor_condition} AND name = :name
+        GROUP BY version
+    """)
+    char_counts = {str(version): int(count) for version, count in db.execute(sql, {"name": character_name}).fetchall()}
+
+    results = []
+    for version, total_count in totals.items():
+        char_count = char_counts.get(version, 0)
+        pct = (char_count / total_count * 100) if total_count else 0.0
+        results.append({
+            "version": version,
+            "score": round(pct, 2),
+            "count": char_count
+        })
+
+    # Trim leading patches from before the character existed
+    first_seen = next((i for i, r in enumerate(results) if r["count"] > 0), None)
+    return results[first_seen:] if first_seen is not None else []

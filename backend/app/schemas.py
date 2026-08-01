@@ -73,6 +73,18 @@ class SurvivalBinResult(BaseModel):
     count: int
 
 
+class UsageTrendRequest(BaseModel):
+    character: str
+    gameMode: str = "pureFiction"  # "pureFiction", "apocalypticShadow", "memoryOfChaos", or "anomalyArbitration"
+    floor_type: Optional[str] = None  # "knights" or "king_normal", required for AA
+
+
+class UsageTrendResult(BaseModel):
+    version: str
+    score: float  # % of players who used the character that patch
+    count: int    # number of distinct players who used the character that patch
+
+
 class UploadResponse(BaseModel):
     inserted: int
     updated: int

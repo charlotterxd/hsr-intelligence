@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text, func
 from app.db.models import CharacterInfo
 from app.db import crud
+from app.db.query_cache import get_cached
 from typing import List
 
 
@@ -612,3 +613,46 @@ def get_survival_analysis_as(
         })
 
     return results
+
+
+def _get_as_totals(db: Session) -> dict:
+    """Distinct players per patch, for Apocalyptic Shadow. Character-agnostic, cached."""
+    sql = text("""
+        SELECT version, COUNT(DISTINCT uid) AS total_count
+        FROM player_records_as
+        GROUP BY version
+        ORDER BY version
+    """)
+    return {str(version): int(total) for version, total in db.execute(sql).fetchall()}
+
+
+def get_usage_trend_as(db: Session, character_name: str) -> List[dict]:
+    """
+    Get the percentage of players using a character each patch, for Apocalyptic Shadow.
+    Denominator = distinct players (uid) with any record that patch (cached,
+    identical across characters). Numerator = distinct players who used the
+    character that patch (queried live, scoped by the name index).
+    """
+    totals = get_cached(("usage_trend_totals", "as"), lambda: _get_as_totals(db))
+
+    sql = text("""
+        SELECT version, COUNT(DISTINCT uid) AS char_count
+        FROM player_records_as
+        WHERE name = :name
+        GROUP BY version
+    """)
+    char_counts = {str(version): int(count) for version, count in db.execute(sql, {"name": character_name}).fetchall()}
+
+    results = []
+    for version, total_count in totals.items():
+        char_count = char_counts.get(version, 0)
+        pct = (char_count / total_count * 100) if total_count else 0.0
+        results.append({
+            "version": version,
+            "score": round(pct, 2),
+            "count": char_count
+        })
+
+    # Trim leading patches from before the character existed
+    first_seen = next((i for i, r in enumerate(results) if r["count"] > 0), None)
+    return results[first_seen:] if first_seen is not None else []

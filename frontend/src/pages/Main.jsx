@@ -17,6 +17,10 @@ import aaScoreTrendChibi from '../assets/chibi/scoretrend_aa.webp'
 import aaCycleAnalysisChibi from '../assets/chibi/cycleanalysis_aa.webp'
 import aaCostAnalysisChibiAA from '../assets/chibi/costanalysis_aa.webp'
 import executePlsChibi from '../assets/chibi/execute_pls.webp'
+import pfUsageTrendChibi from '../assets/chibi/usagetrend_pf.png'
+import asUsageTrendChibi from '../assets/chibi/usagetrend_as.png'
+import mocUsageTrendChibi from '../assets/chibi/usagetrend_moc.png'
+import aaUsageTrendChibi from '../assets/chibi/usagetrend_aa.png'
 import { getTrends, getCharacters, getAADistribution } from '../api'
 import FilterRow from '../components/FilterRow'
 import AADistributionGrid from '../components/AADistributionGrid'
@@ -30,6 +34,7 @@ import styles from './Main.module.css'
 const TrendChart = lazy(() => import('../components/TrendChart'))
 const CostAnalysis = lazy(() => import('../components/CostAnalysis'))
 const SurvivalAnalysis = lazy(() => import('../components/SurvivalAnalysis'))
+const UsageTrend = lazy(() => import('../components/UsageTrend'))
 
 const COLORS = ['var(--accent)', '#82ca9d', '#ff7c43', '#a05195', '#ffa600']
 
@@ -362,6 +367,12 @@ export default function Main() {
         >
           Survival Analysis
         </button>
+        <button
+          className={`${styles.tab} ${activeTab === 'usage' ? styles.activeTab : ''}`}
+          onClick={() => setActiveTab('usage')}
+        >
+          Usage Trend
+        </button>
       </div>
 
       {activeTab === 'trends' && (
@@ -451,6 +462,12 @@ export default function Main() {
           <SurvivalAnalysis characters={characters} gameMode={gameMode} isDarkMode={isDarkMode} chibiImage={pfSurvivalChibi} />
         </Suspense>
       )}
+
+      {activeTab === 'usage' && !loadingChars && (
+        <Suspense fallback={<div>Loading usage trend...</div>}>
+          <UsageTrend characters={characters} gameMode={gameMode} isDarkMode={isDarkMode} chibiImage={pfUsageTrendChibi} />
+        </Suspense>
+      )}
           </>
         )}
 
@@ -478,6 +495,12 @@ export default function Main() {
           onClick={() => setActiveTab('survival')}
         >
           Survival Analysis
+        </button>
+        <button
+          className={`${styles.tab} ${activeTab === 'usage' ? styles.activeTab : ''}`}
+          onClick={() => setActiveTab('usage')}
+        >
+          Usage Trend
         </button>
       </div>
 
@@ -568,6 +591,12 @@ export default function Main() {
           <SurvivalAnalysis characters={characters} gameMode={gameMode} isDarkMode={isDarkMode} chibiImage={asSurvivalChibi} />
         </Suspense>
       )}
+
+      {activeTab === 'usage' && !loadingChars && (
+        <Suspense fallback={<div>Loading usage trend...</div>}>
+          <UsageTrend characters={characters} gameMode={gameMode} isDarkMode={isDarkMode} chibiImage={asUsageTrendChibi} />
+        </Suspense>
+      )}
           </>
         )}
 
@@ -595,6 +624,12 @@ export default function Main() {
           onClick={() => setActiveTab('survival')}
         >
           Survival Analysis
+        </button>
+        <button
+          className={`${styles.tab} ${activeTab === 'usage' ? styles.activeTab : ''}`}
+          onClick={() => setActiveTab('usage')}
+        >
+          Usage Trend
         </button>
       </div>
 
@@ -685,6 +720,12 @@ export default function Main() {
           <SurvivalAnalysis characters={characters} gameMode={gameMode} isDarkMode={isDarkMode} chibiImage={mocSurvivalChibi} />
         </Suspense>
       )}
+
+      {activeTab === 'usage' && !loadingChars && (
+        <Suspense fallback={<div>Loading usage trend...</div>}>
+          <UsageTrend characters={characters} gameMode={gameMode} isDarkMode={isDarkMode} chibiImage={mocUsageTrendChibi} />
+        </Suspense>
+      )}
           </>
         )}
 
@@ -718,6 +759,12 @@ export default function Main() {
           onClick={() => setActiveTab('costAnalysis')}
         >
           Cost Analysis
+        </button>
+        <button
+          className={`${styles.tab} ${activeTab === 'usage' ? styles.activeTab : ''}`}
+          onClick={() => setActiveTab('usage')}
+        >
+          Usage Trend
         </button>
       </div>
 
@@ -996,6 +1043,12 @@ export default function Main() {
       {activeTab === 'costAnalysis' && !loadingChars && (
         <Suspense fallback={<div>Loading cost analysis...</div>}>
           <CostAnalysis characters={characters} gameMode={gameMode} isDarkMode={isDarkMode} onNavigateToMethodologies={() => setGameMode('methodologies')} chibiImage={aaCostAnalysisChibiAA} />
+        </Suspense>
+      )}
+
+      {activeTab === 'usage' && !loadingChars && (
+        <Suspense fallback={<div>Loading usage trend...</div>}>
+          <UsageTrend characters={characters} gameMode={gameMode} isDarkMode={isDarkMode} chibiImage={aaUsageTrendChibi} />
         </Suspense>
       )}
           </>

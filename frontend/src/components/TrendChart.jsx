@@ -24,14 +24,8 @@ export default function TrendChart({ lines, gameMode = 'pureFiction', isPercenta
 
   // Merge all versions across lines into unified dataset
   const versionMap = {}
-  const lineInfo = {}
 
   lines.forEach(line => {
-    lineInfo[`line_${line.id}`] = {
-      label: line.label,
-      color: line.color
-    }
-
     line.data.forEach(item => {
       if (!versionMap[item.version]) {
         versionMap[item.version] = { version: item.version }
@@ -59,6 +53,7 @@ export default function TrendChart({ lines, gameMode = 'pureFiction', isPercenta
         if (score !== undefined) {
           items.push({
             label: line.label,
+            color: line.color,
             score: score.toFixed(2),
             count: count || 0
           })
@@ -72,7 +67,7 @@ export default function TrendChart({ lines, gameMode = 'pureFiction', isPercenta
           <p data-tag="true" className={styles.tooltipLabel}>v{data.version}</p>
           {items.map((item, idx) => (
             <div data-tag="true" key={idx} className={styles.tooltipItem}>
-              <p data-tag="true" className={styles.tooltipLine} style={{ color: lineInfo[`line_${lines[idx].id}`]?.color }}>
+              <p data-tag="true" className={styles.tooltipLine} style={{ color: item.color }}>
                 {item.label}: {item.score}{scoreUnit}
               </p>
               {item.count > 0 && (
@@ -90,7 +85,7 @@ export default function TrendChart({ lines, gameMode = 'pureFiction', isPercenta
 
   return (
     <div className={styles.container}>
-      {gameMode !== 'anomalyArbitration' && (
+      {gameMode !== 'anomalyArbitration' && !isPercentage && (
         <div className={styles.header}>
           <h2>Score Trends</h2>
           <div className={styles.thresholdInput}>
