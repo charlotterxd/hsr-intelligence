@@ -237,43 +237,45 @@ export default function AAHardModeStats({ characters = [] }) {
             <div className={styles.note}>
               <p><strong>Note:</strong> For teams with multiple DPS characters, we count the one with highest eidolons. Priority order: Castorice → Silver Wolf → Evanescia → Phainon → Others. Therefore: Evernight teams with Castorice are counted as Castorice. Sparxie teams with Silver Wolf or Evanescia are counted as those characters.</p>
             </div>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>Character</th>
-                  <th>Eidolon</th>
-                  <th>Avg Cost</th>
-                  <th>Median Cost</th>
-                  <th>Sustain Rate</th>
-                  <th>Percentage</th>
-                </tr>
-              </thead>
-              <tbody>
-                {stats.top_dps.map((dps, idx) => {
-                  const char = characters.find(c => c.name === dps.character)
-                  return (
-                    <tr key={idx}>
-                      <td className={styles.characterCell}>
-                        {char && (
-                          <img
-                            src={getImagePath(char.id)}
-                            alt={dps.character}
-                            className={styles.charImage}
-                            onError={(e) => { e.target.style.display = 'none' }}
-                          />
-                        )}
-                        <span>{dps.character}</span>
-                      </td>
-                      <td>{dps.eidolon_group}</td>
-                      <td>{dps.avg_cost ? dps.avg_cost.toFixed(1) : '-'}</td>
-                      <td>{dps.median_cost ? dps.median_cost.toFixed(1) : '-'}</td>
-                      <td>{dps.sustain_usage_rate ? dps.sustain_usage_rate.toFixed(1) : '-'}%</td>
-                      <td>{dps.percentage ? dps.percentage.toFixed(1) : '-'}%</td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
+            <div className={styles.tableScroll}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>Character</th>
+                    <th>Eidolon</th>
+                    <th>Avg Cost</th>
+                    <th>Median Cost</th>
+                    <th>Sustain Rate</th>
+                    <th>Percentage</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stats.top_dps.map((dps, idx) => {
+                    const char = characters.find(c => c.name === dps.character)
+                    return (
+                      <tr key={idx}>
+                        <td className={styles.characterCell}>
+                          {char && (
+                            <img
+                              src={getImagePath(char.id)}
+                              alt={dps.character}
+                              className={styles.charImage}
+                              onError={(e) => { e.target.style.display = 'none' }}
+                            />
+                          )}
+                          <span>{dps.character}</span>
+                        </td>
+                        <td>{dps.eidolon_group}</td>
+                        <td>{dps.avg_cost ? dps.avg_cost.toFixed(1) : '-'}</td>
+                        <td>{dps.median_cost ? dps.median_cost.toFixed(1) : '-'}</td>
+                        <td>{dps.sustain_usage_rate ? dps.sustain_usage_rate.toFixed(1) : '-'}%</td>
+                        <td>{dps.percentage ? dps.percentage.toFixed(1) : '-'}%</td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>

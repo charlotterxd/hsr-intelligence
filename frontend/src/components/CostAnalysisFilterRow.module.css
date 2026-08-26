@@ -280,3 +280,18 @@
   cursor: pointer;
   accent-color: var(--accent);
 }
+
+@media (max-width: 480px) {
+  .controlsRow {
+    grid-template-columns: 1fr;
+  }
+
+  .selectedProfile {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profileInfo {
+    width: 100%;
+  }
+}

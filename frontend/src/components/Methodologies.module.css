@@ -99,3 +99,29 @@
   margin: 4px 0;
   color: var(--text-secondary);
 }
+
+.tableScroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 16px;
+  }
+
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sectionChibi {
+    height: 80px;
+    align-self: center;
+  }
+
+  .table {
+    min-width: 600px;
+  }
+}

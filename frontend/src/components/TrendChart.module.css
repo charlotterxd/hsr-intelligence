@@ -101,6 +101,18 @@
   }
 }
 
+@media (max-width: 600px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .thresholdInput {
+    white-space: normal;
+  }
+}
+
 .header {
   display: flex;
   align-items: center;

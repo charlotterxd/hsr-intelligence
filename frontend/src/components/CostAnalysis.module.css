@@ -273,3 +273,40 @@
   display: block;
   margin: 0 auto 12px;
 }
+
+@media (max-width: 1024px) {
+  .aaChartGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .description {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+  }
+
+  .descriptionChibi {
+    height: 90px;
+    align-self: center;
+  }
+
+  .filterArea,
+  .chartArea {
+    padding: 14px;
+  }
+
+  .filterRows {
+    grid-template-columns: 1fr;
+  }
+
+  .filterButtons {
+    flex-wrap: wrap;
+  }
+
+  .filterButtons button {
+    flex: 1;
+    min-width: 120px;
+  }
+}

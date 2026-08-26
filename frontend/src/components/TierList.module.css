@@ -540,3 +540,60 @@
   color: var(--accent);
   text-align: center;
 }
+
+.tableScroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.thresholdTable {
+  min-width: 520px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0;
+  }
+
+  .description,
+  .filterBar {
+    padding: 14px 16px;
+  }
+
+  .modeTabBar {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .modeTabBar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .modeTab {
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 10px 14px;
+  }
+
+  .filterRow {
+    gap: 12px;
+  }
+
+  .select,
+  .exclusionToggle {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .charCard {
+    width: 76px;
+  }
+
+  .charImageWrapper {
+    width: 68px;
+    height: 68px;
+  }
+}

@@ -56,7 +56,7 @@ const createLineConfig = (id, colorIndex) => ({
 export default function Main() {
   const [isDarkMode, setIsDarkMode] = useState(true)
   const [gameMode, setGameMode] = useState('home')
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(() => typeof window === 'undefined' || window.innerWidth > 768)
   const [activeTab, setActiveTab] = useState('trends')
   const [statisticsSubTab, setStatisticsSubTab] = useState('peasant')
   const [lineConfigs, setLineConfigs] = useState([createLineConfig(0, 0)])
@@ -90,6 +90,9 @@ export default function Main() {
 
   useEffect(() => {
     // Reset state when switching game modes
+    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+      setSidebarOpen(false)
+    }
     setActiveTab(gameMode === 'anomalyArbitration' ? 'statistics' : 'trends')
     setLineConfigs([createLineConfig(0, 0)])
     setAllTrends([])
@@ -274,6 +277,9 @@ export default function Main() {
       </div>
 
       <div style={{ display: 'flex', minHeight: '100%' }}>
+        {sidebarOpen && (
+          <div className={styles.sidebarBackdrop} onClick={() => setSidebarOpen(false)} />
+        )}
         <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : styles.sidebarClosed}`}>
         <div className={styles.sidebarContent}>
           {sidebarOpen && (

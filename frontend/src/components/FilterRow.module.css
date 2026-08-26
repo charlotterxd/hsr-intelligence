@@ -560,3 +560,37 @@
     width: 100%;
   }
 }
+
+@media (max-width: 768px) {
+  .row {
+    padding: 14px;
+  }
+
+  .lineHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .lineHeaderLeft,
+  .lineHeaderRight {
+    flex-wrap: wrap;
+  }
+
+  .lineNameInput {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .slotsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .slot {
+    min-width: 0;
+  }
+
+  .excludeRow {
+    flex-direction: column;
+  }
+}

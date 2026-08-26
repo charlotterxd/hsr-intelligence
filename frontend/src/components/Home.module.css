@@ -317,3 +317,55 @@
     max-width: 100%;
   }
 }
+
+@media (max-width: 600px) {
+  .hero {
+    padding: 20px;
+    padding-bottom: 20px;
+  }
+
+  .characterImg {
+    width: 180px;
+  }
+
+  .heroLeft {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .speechBubble {
+    margin-left: 0;
+    margin-top: 12px;
+  }
+
+  .speechBubble::before {
+    display: none;
+  }
+
+  .heroTitle {
+    font-size: 1.5em;
+  }
+
+  .heroRight {
+    padding-left: 0;
+    padding-bottom: 0;
+  }
+
+  .analysisGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .tierlistPromo {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 20px;
+  }
+
+  .tierlistPromoAction {
+    align-self: stretch;
+  }
+
+  .tierlistPromoBtn {
+    width: 100%;
+  }
+}

@@ -440,6 +440,7 @@ export default function TierList({ characters = [] }) {
             <p style={{ marginTop: 14, marginBottom: 8, fontWeight: 600, color: 'var(--text-primary)', fontSize: 13 }}>
               Step 1 — Each mode places the character in a tier using its own thresholds:
             </p>
+            <div className={styles.tableScroll}>
             <table className={styles.thresholdTable}>
               <thead>
                 <tr>
@@ -468,6 +469,7 @@ export default function TierList({ characters = [] }) {
                 ))}
               </tbody>
             </table>
+            </div>
 
             <p style={{ marginTop: 14, marginBottom: 4, fontWeight: 600, color: 'var(--text-primary)', fontSize: 13 }}>
               Step 2 — Each tier converts to a numeric score:

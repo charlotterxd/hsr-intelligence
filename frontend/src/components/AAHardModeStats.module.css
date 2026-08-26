@@ -233,3 +233,36 @@
   border-radius: 4px;
   object-fit: cover;
 }
+
+.tableScroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 12px;
+  }
+
+  .descriptionHeader {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cacheStatus {
+    justify-content: space-between;
+  }
+
+  .patchRange {
+    align-items: flex-start;
+  }
+
+  .table {
+    min-width: 640px;
+  }
+
+  .chartBox {
+    height: 320px;
+  }
+}

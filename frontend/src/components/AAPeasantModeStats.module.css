@@ -128,3 +128,26 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 768px) {
+  .container {
+    padding: 12px;
+  }
+
+  .descriptionHeader {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cacheStatus {
+    justify-content: space-between;
+  }
+
+  .gridItem {
+    padding: 14px;
+  }
+
+  .chartBox {
+    min-height: 300px;
+  }
+}

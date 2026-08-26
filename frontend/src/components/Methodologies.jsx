@@ -19,6 +19,7 @@ export default function Methodologies() {
           </div>
         </div>
 
+        <div className={styles.tableScroll}>
         <table className={styles.table}>
           <thead>
             <tr>
@@ -96,6 +97,7 @@ export default function Methodologies() {
             </tr>
           </tbody>
         </table>
+        </div>
       </section>
     </div>
   )
