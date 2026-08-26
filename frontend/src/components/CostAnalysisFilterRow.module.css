@@ -281,6 +281,12 @@
   accent-color: var(--accent);
 }
 
+@media (max-width: 768px) {
+  .filterRow {
+    min-width: 0;
+  }
+}
+
 @media (max-width: 480px) {
   .controlsRow {
     grid-template-columns: 1fr;

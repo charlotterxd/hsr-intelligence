@@ -265,6 +265,10 @@
   flex-direction: column;
 }
 
+.container > * {
+  min-width: 0;
+}
+
 .discordLink {
   display: inline-flex;
   align-items: center;

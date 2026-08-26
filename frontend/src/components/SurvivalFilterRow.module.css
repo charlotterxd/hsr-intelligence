@@ -342,6 +342,12 @@
   accent-color: var(--accent);
 }
 
+@media (max-width: 768px) {
+  .filterRow {
+    min-width: 0;
+  }
+}
+
 @media (max-width: 480px) {
   .filterSubrow,
   .controlsRow {

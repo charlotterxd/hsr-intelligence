@@ -564,6 +564,7 @@
 @media (max-width: 768px) {
   .row {
     padding: 14px;
+    min-width: 0;
   }
 
   .lineHeader {
