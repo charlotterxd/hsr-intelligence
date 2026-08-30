@@ -29,7 +29,15 @@ services:
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       DEBUG: ${DEBUG:-False}
     networks:
-      - dokploy-network
+      # dokploy-network: Traefik routes /api here, and Postgres lives here too.
+      dokploy-network:
+      # internal: stack-private, so nginx in the frontend can reach the backend
+      # under a name that cannot collide. dokploy-network is shared by every
+      # Dokploy stack and has no namespacing, so a generic `backend` alias is
+      # not safe to proxy to.
+      internal:
+        aliases:
+          - hsr-api
     labels:
       # Opt in to log collection. Alloy keeps only containers carrying
       # logs.collect=true, so nothing else on the VM is ingested.
@@ -46,15 +54,25 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
-      args:
-        # Build-time: Vite inlines import.meta.env at build, so this cannot be
-        # a runtime env var.
-        VITE_API_URL: http://hsr-intelligence.home
+      # No VITE_API_URL arg on purpose. The Dockerfile defaults it to empty,
+      # which makes api.js use a relative, same-origin base -- the only way the
+      # app works under both hsr-intelligence.home and a bare IP:port.
     restart: unless-stopped
     depends_on:
       - backend
+    # Published so clients that cannot resolve `.home` -- phones above all, on
+    # Wi-Fi and over Tailscale alike -- can reach the app by IP:port. Traefik
+    # routes by Host header only, so a bare-IP request matches no router and
+    # answers 404. This port bypasses Traefik entirely.
+    #
+    # Paired with a `netsh portproxy` entry on the Windows host, 8653 ->
+    # 10.210.0.10:8653. That restores the pre-migration URL, which keeps
+    # charlotterhub's url_wifi/url_tailscale entries correct with no edit.
+    ports:
+      - "8653:80"
     networks:
       - dokploy-network
+      - internal
     labels:
       - logs.collect=true
       - logs.app=hsr-intelligence
@@ -65,5 +83,6 @@ services:
       - traefik.http.services.hsr-frontend.loadbalancer.server.port=80
 
 networks:
+  internal:
   dokploy-network:
     external: true

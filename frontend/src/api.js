@@ -1,6 +1,11 @@
 import axios from 'axios'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+// Empty base = same-origin. Every call below is already '/api'-prefixed, so a
+// relative base works behind Traefik (which routes /api on the .home hostname)
+// and behind nginx (which proxies /api when the app is reached by IP:port).
+// An absolute URL here would break IP access: the page would load, then call
+// the baked-in hostname, which phones and off-LAN clients cannot resolve.
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:8000' : '')
 
 const api = axios.create({
   baseURL: API_URL,

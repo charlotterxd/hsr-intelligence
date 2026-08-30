@@ -16,11 +16,15 @@ RUN npm install
 
 COPY . .
 
-# Must be a truthy absolute URL: frontend/src/api.js falls back to
-# 'http://localhost:8000' when this is empty. Pointing it at the app's own
-# origin keeps every request same-origin, so there is no CORS to configure --
-# Traefik routes /api to the backend under the same hostname.
-ARG VITE_API_URL=http://hsr-intelligence.home
+# Deliberately EMPTY. api.js then uses a relative base, so requests are always
+# same-origin -- no CORS, and the app works under every hostname it is served
+# on: hsr-intelligence.home via Traefik, and 192.168.1.47:8653 /
+# 100.120.218.121:8653 via the published port.
+#
+# An absolute URL here would be baked into the bundle at build time and break
+# IP access: the page loads, then every API call goes to that one hostname,
+# which phones and off-LAN clients cannot resolve.
+ARG VITE_API_URL=
 ENV VITE_API_URL=$VITE_API_URL
 RUN npm run build
 
