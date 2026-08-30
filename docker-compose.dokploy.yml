@@ -31,6 +31,10 @@ services:
     networks:
       - dokploy-network
     labels:
+      # Opt in to log collection. Alloy keeps only containers carrying
+      # logs.collect=true, so nothing else on the VM is ingested.
+      - logs.collect=true
+      - logs.app=hsr-intelligence
       - traefik.enable=true
       - traefik.http.routers.hsr-backend.rule=Host(`hsr-intelligence.home`) && PathPrefix(`/api`)
       # Must outrank the frontend's catch-all, or /api would hit nginx.
@@ -52,6 +56,8 @@ services:
     networks:
       - dokploy-network
     labels:
+      - logs.collect=true
+      - logs.app=hsr-intelligence
       - traefik.enable=true
       - traefik.http.routers.hsr-frontend.rule=Host(`hsr-intelligence.home`)
       - traefik.http.routers.hsr-frontend.priority=1
