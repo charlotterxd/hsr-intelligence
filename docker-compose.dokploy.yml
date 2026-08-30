@@ -1,0 +1,63 @@
+# hsr-intelligence on the Dokploy VM (10.210.0.10).
+#
+# SEPARATE from ./docker-compose.yml on purpose. That file still drives the
+# Windows-host deployment and is left untouched, so this migration cannot break
+# the running service. Dokploy is pointed at this file via composePath.
+#
+# Differences from the Windows-host compose, all required rather than cosmetic:
+#
+#  * No source bind mounts. Dokploy re-clones the repo every deploy, giving each
+#    path a new inode; bind-mounted source keeps pointing at the old orphaned
+#    one and silently serves stale code.
+#  * No `--reload` and no `npm run dev`. Code comes from the image; the backend
+#    Dockerfile's own CMD is already correct for production.
+#  * No published ports. Traefik routes by Host header on the shared
+#    dokploy-network, so the stack needs no host ports at all.
+#
+# Routing, single hostname, no CORS:
+#   hsr-intelligence.home/api/*  -> backend:8000   (higher priority)
+#   hsr-intelligence.home/*      -> frontend:80
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      DEBUG: ${DEBUG:-False}
+    networks:
+      - dokploy-network
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.hsr-backend.rule=Host(`hsr-intelligence.home`) && PathPrefix(`/api`)
+      # Must outrank the frontend's catch-all, or /api would hit nginx.
+      - traefik.http.routers.hsr-backend.priority=10
+      - traefik.http.routers.hsr-backend.entrypoints=web
+      - traefik.http.services.hsr-backend.loadbalancer.server.port=8000
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+      args:
+        # Build-time: Vite inlines import.meta.env at build, so this cannot be
+        # a runtime env var.
+        VITE_API_URL: http://hsr-intelligence.home
+    restart: unless-stopped
+    depends_on:
+      - backend
+    networks:
+      - dokploy-network
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.hsr-frontend.rule=Host(`hsr-intelligence.home`)
+      - traefik.http.routers.hsr-frontend.priority=1
+      - traefik.http.routers.hsr-frontend.entrypoints=web
+      - traefik.http.services.hsr-frontend.loadbalancer.server.port=80
+
+networks:
+  dokploy-network:
+    external: true

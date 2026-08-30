@@ -1,0 +1,30 @@
+# Production frontend image, used by docker-compose.dokploy.yml on the Dokploy VM.
+#
+# The original ./Dockerfile runs `npm run dev` (a Vite dev server) and the
+# Windows-host compose bind-mounts the source over it. Neither works under
+# Dokploy: it re-clones the repo on every deploy, which gives every path a new
+# inode, so bind-mounted source silently goes stale.
+#
+# VITE_API_URL is a BUILD-time value -- Vite inlines import.meta.env at build,
+# so it cannot be supplied as a runtime environment variable.
+
+FROM node:18-alpine AS build
+WORKDIR /app
+
+COPY package.json package-lock.json* ./
+RUN npm install
+
+COPY . .
+
+# Must be a truthy absolute URL: frontend/src/api.js falls back to
+# 'http://localhost:8000' when this is empty. Pointing it at the app's own
+# origin keeps every request same-origin, so there is no CORS to configure --
+# Traefik routes /api to the backend under the same hostname.
+ARG VITE_API_URL=http://hsr-intelligence.home
+ENV VITE_API_URL=$VITE_API_URL
+RUN npm run build
+
+FROM nginx:1.27-alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
